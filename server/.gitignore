@@ -1,0 +1,15 @@
+# L'exécutable PocketBase
+pocketbase.exe
+
+# La base de données et les fichiers locaux (images téléchargées, etc.)
+pb_data/
+
+# Les logs de PocketBase
+*.log
+
+# Les migrations automatiques (optionnel, mais conseillé si tu utilises pb_schema.json)
+pb_migrations/
+
+# Fichiers système inutiles
+.DS_Store
+Thumbs.db
