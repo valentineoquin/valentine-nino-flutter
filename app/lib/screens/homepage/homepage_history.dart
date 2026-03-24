@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/res/app_theme_extension.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePageHistory extends StatelessWidget {
   const HomePageHistory({super.key});
@@ -14,6 +15,7 @@ class HomePageHistory extends StatelessWidget {
       title: 'Petits pois et carottes',
       brand: 'Cassegrain',
       nutriscoreLetter: ['A', 'C', 'D', 'E', 'E'][index % 5],
+      gtin: '5000159484695', // Real GTIN for the OFF API and PocketBase Alert
     ));
 
     return ListView.builder(
@@ -23,19 +25,23 @@ class HomePageHistory extends StatelessWidget {
         final item = items[index];
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.grey2.withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
+          child: GestureDetector(
+            onTap: () {
+              context.push('/product', extra: item.gtin);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.grey2.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
@@ -99,8 +105,9 @@ class HomePageHistory extends StatelessWidget {
               ],
             ),
           ),
-        );
-      },
+        ),
+      );
+    },
     );
   }
 
@@ -126,10 +133,12 @@ class _MockItem {
   final String title;
   final String brand;
   final String nutriscoreLetter;
+  final String gtin;
 
   _MockItem({
     required this.title,
     required this.brand,
     required this.nutriscoreLetter,
+    required this.gtin,
   });
 }
