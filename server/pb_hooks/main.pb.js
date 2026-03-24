@@ -1,101 +1,65 @@
-// main.pb.js
+// pb_hooks/main.pb.js
 
-// --- FONCTION CENTRALE D'IMPORTATION ---
-function performImport() {
+onAfterBootstrap((e) => {
+    console.log("Initialisation de la base de données...");
+
+    let collection;
     try {
-        var collection;
-        try {
-            collection = $app.findCollectionByNameOrId("recalls");
-        } catch (err) {
-            // La collection n'existe pas encore
-        }
-
-        // Création de la collection si elle est absente
-        if (!collection) {
-            console.log("Création de la collection 'recalls'...");
-            collection = new Collection({
-                name: "recalls",
-                type: "base",
-                schema: [
-                    { name: "externalId", type: "text", required: true },
-                    { name: "gtin", type: "text" },
-                    { name: "libelle", type: "text" },
-                    { name: "marque", type: "text" },
-                    { name: "categorie", type: "text" },
-                    { name: "sous_categorie", type: "text" },
-                    { name: "motif", type: "text" },
-                    { name: "risques", type: "text" },
-                    { name: "date_publication", type: "text" },
-                    { name: "image_url", type: "text" },
-                    { name: "fiche_url", type: "text" }
-                ]
-            });
-            $app.save(collection);
-        }
-
-        console.log("Appel de l'API RappelConso...");
-        // API v2.1 (version 2026 compatible)
-        var url = "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/rappelconso-v2-gtin-trie/records?limit=100";
-        var res = $http.send({ url: url, method: "GET" });
-        
-        var data = res.json;
-        if (!data.results) throw new Error("Format API invalide ou pas de résultats");
-
-        data.results.forEach(function (item) {
-            var extId = String(item.id || "");
-            if (!extId) return; // On saute si pas d'ID
-
-            var record;
-            try {
-                // On cherche si le produit existe déjà via son ID externe
-                record = $app.findFirstRecordByData("recalls", "externalId", extId);
-            } catch (err) {
-                // Sinon on crée un nouvel enregistrement
-                record = new Record(collection);
-            }
-
-            // Mise à jour des champs
-            record.set("externalId", extId);
-            record.set("gtin", String(item.gtin || ""));
-            record.set("libelle", String(item.nom_commercial_du_produit || item.libelle || ""));
-            record.set("marque", String(item.marque_produit || ""));
-            record.set("categorie", String(item.categorie_produit || ""));
-            record.set("sous_categorie", String(item.sous_categorie_produit || ""));
-            record.set("motif", String(item.motif_rappel || ""));
-            record.set("risques", String(item.risques_encourus || ""));
-            record.set("date_publication", String(item.date_publication || ""));
-
-            // Gestion de l'image (on prend la première si plusieurs sont présentes)
-            var images = item.liens_vers_les_images ? String(item.liens_vers_les_images).split('|') : [];
-            record.set("image_url", images.length > 0 ? images[0] : "");
-            
-            record.set("fiche_url", String(item.lien_vers_la_fiche_rappel || ""));
-
-            $app.save(record);
+        collection = $app.findCollectionByNameOrId("recalls");
+        console.log("Collection 'recalls' existe déjà.");
+    } catch (err) {
+        console.log("Création de la collection 'recalls'...");
+        collection = new Collection({
+            name: "recalls",
+            type: "base",
+            schema: [
+                { name: "gtin", type: "text", required: true },
+                { name: "libelle", type: "text" },
+                { name: "marque_produit", type: "text" },
+                { name: "lien_image", type: "text" },
+                { name: "date_debut_commercialisation", type: "text" },
+                { name: "date_fin_commercialisation", type: "text" },
+                { name: "distributeurs", type: "text" },
+                { name: "zone_geographique_de_vente", type: "text" },
+                { name: "motif_rappel", type: "text" },
+                { name: "risques_encourus", type: "text" },
+                { name: "informations_complementaires", type: "text" },
+                { name: "conduites_a_tenir", type: "text" },
+                { name: "lien_fiche_pdf", type: "text" }
+            ],
+            listRule: "",
+            viewRule: "",
+            createRule: "",
+            updateRule: "",
+            deleteRule: ""
         });
-
-        console.log("Importation réussie : " + data.results.length + " produits traités.");
-    } catch (err) {
-        console.log("ERREUR IMPORT : " + err.toString());
-        throw err; // On propage l'erreur pour le log du router
+        
+        $app.save(collection);
+        console.log("Collection 'recalls' créée avec succès.");
     }
-}
 
-// --- 1. ROUTE POUR TEST MANUEL ---
-// URL : http://127.0.0.1:8090/test-import
-routerAdd("GET", "/test-import", function (e) {
+    // Vérifier si le produit factice est déjà dans la base
     try {
-        performImport();
-        return e.json(200, { success: true, message: "Importation manuelle réussie" });
+        $app.findFirstRecordByData("recalls", "gtin", "5000159484695");
+        console.log("Les données de test existent déjà.");
     } catch (err) {
-        return e.json(500, { success: false, error: err.toString() });
-    }
-});
+        console.log("Insertion des données de test...");
+        const record = new Record(collection);
+        record.set("gtin", "5000159484695");
+        record.set("libelle", "Petits pois et carottes");
+        record.set("marque_produit", "Cassegrain");
+        record.set("lien_image", "https://i.goopics.net/f20108.jpg"); 
+        record.set("date_debut_commercialisation", "27/10/2025");
+        record.set("date_fin_commercialisation", "29/01/2026");
+        record.set("distributeurs", "ALDI - AUCHAN - CARREFOUR - CASINO - CORA - INTERMARCHE - LECLERC - LIDL - MONOPRIX - SCHIEVER - SYSTÈME U");
+        record.set("zone_geographique_de_vente", "France entière");
+        record.set("motif_rappel", "Ce rappel est mis en œuvre par mesure de précaution afin de protéger les personnes allergiques au lait, absent sur la liste d'ingrédients. Il existe de ce fait un risque pour les personnes allergiques au LAIT.");
+        record.set("risques_encourus", "Substances allergisantes non déclarées");
+        record.set("informations_complementaires", "Aucune information supplémentaire.");
+        record.set("conduites_a_tenir", "Ne plus consommer | Rapporter le produit au point de vente | Détruire le produit");
+        record.set("lien_fiche_pdf", "https://rappel.conso.gouv.fr/");
 
-// --- 2. PLANIFICATION AUTOMATIQUE (CRON) ---
-// S'exécute 2 fois par jour (à minuit et à midi)
-// Syntaxe : minute heure jour mois jour_de_semaine
-cronAdd("importRecalls", "0 0,12 * * *", function () {
-    console.log("Déclenchement du cron : Importation automatique en cours...");
-    performImport();
+        $app.save(record);
+        console.log("Données de test insérées avec succès.");
+    }
 });

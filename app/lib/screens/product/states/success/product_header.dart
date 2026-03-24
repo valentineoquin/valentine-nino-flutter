@@ -117,18 +117,38 @@ class ProductNameHeader extends StatelessWidget {
       child: Material(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
+          padding: const EdgeInsetsDirectional.only(start: 24.0, end: 24.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(product.name ?? '-', style: context.theme.title1),
-              const SizedBox(height: 3.0),
               Text(
-                product.brands?.join(', ') ?? '-',
-                style: context.theme.title2,
+                product.name ?? 'Petits pois et carottes',
+                style: context.theme.montserrat14.copyWith(
+                  color: const Color(0xFF080040),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(height: 8.0),
+              const SizedBox(height: 4.0),
+              Text(
+                product.brands?.join(', ') ?? 'Cassegrain',
+                style: const TextStyle(
+                  color: Color(0xFFB8BBC6),
+                  fontSize: 14,
+                  fontFamily: 'Avenir',
+                ),
+              ),
+              const SizedBox(height: 12.0),
+              const Text(
+                "Petits pois et carottes à l'étuvée avec garniture",
+                style: TextStyle(
+                  color: Color(0xFF6A6A6A),
+                  fontSize: 14,
+                  fontFamily: 'Avenir',
+                ),
+              ),
+              const SizedBox(height: 16.0),
             ],
           ),
         ),

@@ -4,6 +4,9 @@ import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/res/app_theme_extension.dart';
 import 'package:formation_flutter/screens/homepage/homepage_screen.dart';
 import 'package:formation_flutter/screens/product/product_page.dart';
+import 'package:formation_flutter/screens/auth/login_screen.dart';
+import 'package:formation_flutter/screens/auth/register_screen.dart';
+import 'package:formation_flutter/screens/favorites/favorites_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:formation_flutter/recall_provider.dart';
@@ -21,8 +24,12 @@ void main() {
 }
 
 GoRouter _router = GoRouter(
+  initialLocation: '/login',
   routes: [
     GoRoute(path: '/', builder: (_, _) => HomePage()),
+    GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
+    GoRoute(path: '/register', builder: (_, _) => const RegisterScreen()),
+    GoRoute(path: '/favorites', builder: (_, _) => const FavoritesScreen()),
     GoRoute(
       path: '/product',
       builder: (_, GoRouterState state) =>

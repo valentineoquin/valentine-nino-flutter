@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formation_flutter/res/app_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OffThemeExtension extends ThemeExtension<OffThemeExtension> {
   OffThemeExtension({
@@ -7,6 +8,7 @@ class OffThemeExtension extends ThemeExtension<OffThemeExtension> {
     required this.title2,
     required this.title3,
     required this.altText,
+    required this.montserrat14,
   });
 
   OffThemeExtension.defaultValues()
@@ -33,12 +35,18 @@ class OffThemeExtension extends ThemeExtension<OffThemeExtension> {
         fontFamily: 'Avenir',
         fontSize: 15.0,
         fontWeight: FontWeight.normal,
+      ),
+      montserrat14 = GoogleFonts.montserrat(
+        color: AppColors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.w600,
       );
 
   final TextStyle title1;
   final TextStyle title2;
   final TextStyle title3;
   final TextStyle altText;
+  final TextStyle montserrat14;
 
   @override
   ThemeExtension<OffThemeExtension> copyWith({
@@ -46,12 +54,14 @@ class OffThemeExtension extends ThemeExtension<OffThemeExtension> {
     TextStyle? title2,
     TextStyle? title3,
     TextStyle? altText,
+    TextStyle? montserrat14,
   }) {
     return OffThemeExtension(
       title1: title1 ?? this.title1,
       title2: title2 ?? this.title2,
       title3: title3 ?? this.title3,
       altText: altText ?? this.altText,
+      montserrat14: montserrat14 ?? this.montserrat14,
     );
   }
 
@@ -69,6 +79,7 @@ class OffThemeExtension extends ThemeExtension<OffThemeExtension> {
       title2: TextStyle.lerp(title2, other.title2, t)!,
       title3: TextStyle.lerp(title3, other.title3, t)!,
       altText: TextStyle.lerp(altText, other.altText, t)!,
+      montserrat14: TextStyle.lerp(montserrat14, other.montserrat14, t)!,
     );
   }
 }

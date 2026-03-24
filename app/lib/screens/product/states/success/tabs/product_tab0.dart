@@ -110,8 +110,12 @@ class _Nutriscore extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          AppLocalizations.of(context)!.nutriscore,
-          style: context.theme.title3,
+          'Nutri-Score',
+          style: context.theme.montserrat14.copyWith(
+            color: const Color(0xFF080040),
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 5.0),
         Image.asset(_findAssetName(), height: 42.0),
@@ -143,11 +147,22 @@ class _NovaGroup extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          AppLocalizations.of(context)!.nova_group,
-          style: context.theme.title3,
+          'Groupe NOVA',
+          style: context.theme.montserrat14.copyWith(
+            color: const Color(0xFF080040),
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 5.0),
-        Text(_findLabel(), style: const TextStyle(color: AppColors.grey2)),
+        Text(
+          _findLabel(),
+          style: const TextStyle(
+            color: Color(0xFFB8BBC6),
+            fontSize: 12,
+            fontFamily: 'Avenir',
+          ),
+        ),
       ],
     );
   }
@@ -177,8 +192,12 @@ class _GreenScore extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          AppLocalizations.of(context)!.greenscore,
-          style: context.theme.title3,
+          'EcoScore',
+          style: context.theme.montserrat14.copyWith(
+            color: const Color(0xFF080040),
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 5.0),
         Row(
@@ -188,7 +207,11 @@ class _GreenScore extends StatelessWidget {
             Expanded(
               child: Text(
                 _findLabel(),
-                style: const TextStyle(color: AppColors.grey2),
+                style: const TextStyle(
+                  color: Color(0xFFB8BBC6),
+                  fontSize: 12,
+                  fontFamily: 'Avenir',
+                ),
               ),
             ),
           ],
